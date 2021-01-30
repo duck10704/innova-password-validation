@@ -6,11 +6,10 @@ import org.springframework.stereotype.Component;
 
 import com.innovasolutions.validation.model.ValidationException;
 import com.innovasolutions.validation.model.ValidationResponse;
-import com.innovasolutions.validation.service.AbstractService;
 import com.innovasolutions.validation.service.PasswordService;
 
 @Component
-public class PasswordServiceImpl extends AbstractService implements PasswordService {
+public class PasswordServiceImpl implements PasswordService {
 
 	private static final String PATTERN_UPPERCASE_CHARACTERS = ".*[A-Z].*";
 	private static final String PATTERN_LOWERCASE_CHARACTERS = ".*[a-z].*";
@@ -47,5 +46,13 @@ public class PasswordServiceImpl extends AbstractService implements PasswordServ
 		}
 
 		return buildPasswordResponse(HttpStatus.OK, "Valid password");
+	}
+
+	private Boolean isMatchTheRule(String regex, String password) {
+		return password.matches(regex);
+	}
+
+	private ValidationResponse buildPasswordResponse(HttpStatus status, String message) {
+		return new ValidationResponse(status.name(), message);
 	}
 }
