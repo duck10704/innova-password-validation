@@ -1,58 +1,83 @@
 package com.innovasolutions.validation.service.impl;
 
-import org.apache.commons.lang3.StringUtils;
+import java.util.Locale;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import com.innovasolutions.validation.model.ValidationException;
 import com.innovasolutions.validation.model.ValidationResponse;
-import com.innovasolutions.validation.service.PasswordService;
+import com.innovasolutions.validation.rule.PasswordContainLowercaseCharacter;
+import com.innovasolutions.validation.rule.PasswordContainNumericalCharacter;
+import com.innovasolutions.validation.rule.PasswordContainRepeatingString;
+import com.innovasolutions.validation.rule.PasswordContainUppercaseCharacter;
+import com.innovasolutions.validation.rule.PasswordIsBlank;
+import com.innovasolutions.validation.rule.PasswordLengthInRange;
+import com.innovasolutions.validation.service.PasswordValidationService;
 
-@Component
-public class PasswordServiceImpl implements PasswordService {
+@Service
+public class PasswordServiceImpl implements PasswordValidationService {
 
-	private static final String PATTERN_UPPERCASE_CHARACTERS = ".*[A-Z].*";
-	private static final String PATTERN_LOWERCASE_CHARACTERS = ".*[a-z].*";
-	private static final String PATTERN_NUMERICAL_CHARACTERS = ".*[0-9].*";
-	private static final String PATTERN_LOWERCASE_NUMERICAL_CHARACTERS = "[a-z0-9]+";
-	private static final String PATTERN_REPEATING_STRING_CHARACTERS = "([a-z0-9]+)\\1+$";
+	@Autowired
+	private MessageSource messageSource;
 
 	@Override
 	public ValidationResponse isValidPassword(String password) {
-		if (StringUtils.isBlank(password)) {
-			throw new ValidationException("Password can not be blank");
+		if (isPasswordIsBlank(password)) {
+			return buildResponse(HttpStatus.NOT_ACCEPTABLE.value(),
+					messageSource.getMessage("password.validation.is.blank", null, Locale.ENGLISH));
 		}
-		if (password.length() < 5 || password.length() > 12) {
-			return buildPasswordResponse(HttpStatus.NOT_ACCEPTABLE, "Password must between 5 and 12 characters length");
+		if (isPasswordContainUppercase(password)) {
+			return buildResponse(HttpStatus.NOT_ACCEPTABLE.value(),
+					messageSource.getMessage("password.validation.contain.uppercase", null, Locale.ENGLISH));
 		}
-		if (isMatchTheRule(PATTERN_UPPERCASE_CHARACTERS, password)) {
-			return buildPasswordResponse(HttpStatus.NOT_ACCEPTABLE, "Password can not contain uppercase character");
+		if (!isPasswordLengthBetween5And12(password)) {
+			return buildResponse(HttpStatus.NOT_ACCEPTABLE.value(),
+					messageSource.getMessage("password.validation.length.between.5and12.range", null, Locale.ENGLISH));
 		}
-		if (!isMatchTheRule(PATTERN_LOWERCASE_CHARACTERS, password)) {
-			return buildPasswordResponse(HttpStatus.NOT_ACCEPTABLE,
-					"Password must contain at least one lowercase character");
+		if (!isPasswordContainLowercase(password)) {
+			return buildResponse(HttpStatus.NOT_ACCEPTABLE.value(),
+					messageSource.getMessage("password.validation.at.least.one.lowercase", null, Locale.ENGLISH));
 		}
-		if (!isMatchTheRule(PATTERN_NUMERICAL_CHARACTERS, password)) {
-			return buildPasswordResponse(HttpStatus.NOT_ACCEPTABLE,
-					"Password must contain at least one mumerical character");
+		if (!isPasswordContainNumerical(password)) {
+			return buildResponse(HttpStatus.NOT_ACCEPTABLE.value(),
+					messageSource.getMessage("password.validation.at.least.one.numerical", null, Locale.ENGLISH));
 		}
-		if (!isMatchTheRule(PATTERN_LOWERCASE_NUMERICAL_CHARACTERS, password)) {
-			return buildPasswordResponse(HttpStatus.NOT_ACCEPTABLE,
-					"Password must consist of a mixture of lowercase letters and numerical digits only");
-		}
-		if (isMatchTheRule(PATTERN_REPEATING_STRING_CHARACTERS, password)) {
-			return buildPasswordResponse(HttpStatus.NOT_ACCEPTABLE,
-					"Password can not contain any repeating substrings");
+		if (isPasswordContainRepeatingString(password)) {
+			return buildResponse(HttpStatus.NOT_ACCEPTABLE.value(),
+					messageSource.getMessage("password.validation.contain.repeating.substring", null, Locale.ENGLISH));
 		}
 
-		return buildPasswordResponse(HttpStatus.OK, "Valid password");
+		return buildResponse(HttpStatus.OK.value(),
+				messageSource.getMessage("password.validation.valid", null, Locale.ENGLISH));
 	}
 
-	private Boolean isMatchTheRule(String regex, String password) {
-		return password.matches(regex);
+	public Boolean isPasswordIsBlank(String password) {
+		return new PasswordIsBlank().isValid(password);
 	}
 
-	private ValidationResponse buildPasswordResponse(HttpStatus status, String message) {
-		return new ValidationResponse(status.name(), message);
+	public Boolean isPasswordLengthBetween5And12(String password) {
+		return new PasswordLengthInRange(5, 12).isValid(password);
+	}
+
+	public Boolean isPasswordContainUppercase(String password) {
+		return new PasswordContainUppercaseCharacter().isValid(password);
+	}
+
+	public Boolean isPasswordContainLowercase(String password) {
+		return new PasswordContainLowercaseCharacter().isValid(password);
+	}
+
+	public Boolean isPasswordContainNumerical(String password) {
+		return new PasswordContainNumericalCharacter().isValid(password);
+	}
+
+	public Boolean isPasswordContainRepeatingString(String password) {
+		return new PasswordContainRepeatingString().isValid(password);
+	}
+
+	private ValidationResponse buildResponse(int value, String message) {
+		return new ValidationResponse(value, message);
 	}
 }

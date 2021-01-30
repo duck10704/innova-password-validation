@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.innovasolutions.validation.model.ValidationResponse;
-import com.innovasolutions.validation.service.PasswordService;
+import com.innovasolutions.validation.service.PasswordValidationService;
 
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 public class PasswordValidationController {
 
 	@Autowired
-	private PasswordService passwordService;
+	private PasswordValidationService passwordService;
 
 	@PostMapping("/password/validation")
 	public ResponseEntity<ValidationResponse> passwordValidation(@RequestBody String password) {

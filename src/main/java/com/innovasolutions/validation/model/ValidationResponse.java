@@ -6,20 +6,20 @@ public class ValidationResponse implements Serializable {
 
 	private static final long serialVersionUID = 4941492023353944899L;
 
-	private String status;
+	private Integer statusCode;
 	private String message;
 
-	public ValidationResponse(String status, String message) {
-		this.status = status;
+	public ValidationResponse(Integer status, String message) {
+		this.statusCode = status;
 		this.message = message;
 	}
 
-	public String getStatus() {
-		return status;
+	public Integer getStatusCode() {
+		return statusCode;
 	}
 
-	public void setStatus(String status) {
-		this.status = status;
+	public void setStatusCode(Integer statusCode) {
+		this.statusCode = statusCode;
 	}
 
 	public String getMessage() {
