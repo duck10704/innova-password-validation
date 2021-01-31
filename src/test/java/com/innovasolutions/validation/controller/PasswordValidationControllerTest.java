@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.innovasolutions.validation.AbstractTest;
@@ -89,7 +88,12 @@ public class PasswordValidationControllerTest extends AbstractTest {
 	public void testValidPassword() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.post(PASSWORD_VALIDATION_URL).contentType(MediaType.APPLICATION_JSON)
 				.content(new String("foo123test"))).andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.jsonPath("$.statusCode").value(HttpStatus.OK.value()))
-				.andDo(MockMvcResultHandlers.print());
+				.andExpect(MockMvcResultMatchers.jsonPath("$.statusCode").value(HttpStatus.OK.value()));
+	}
+
+	@Test
+	public void testPasswordGetMethod() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get(PASSWORD_VALIDATION_URL).contentType(MediaType.APPLICATION_JSON)
+				.content(new String("foo123foo123"))).andExpect(MockMvcResultMatchers.status().isMethodNotAllowed());
 	}
 }
