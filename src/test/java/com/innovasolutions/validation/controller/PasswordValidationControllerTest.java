@@ -51,6 +51,13 @@ public class PasswordValidationControllerTest extends AbstractTest {
 	}
 
 	@Test
+	public void testPasswordWithSpecialCharacter() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.post(PASSWORD_VALIDATION_URL).contentType(MediaType.APPLICATION_JSON)
+				.content(new String("foo123@test"))).andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.statusCode").value(HttpStatus.NOT_ACCEPTABLE.value()));
+	}
+
+	@Test
 	public void testPasswordWithUpperCase() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.post(PASSWORD_VALIDATION_URL).contentType(MediaType.APPLICATION_JSON)
 				.content(new String("Foo123"))).andExpect(MockMvcResultMatchers.status().isOk())
@@ -75,13 +82,6 @@ public class PasswordValidationControllerTest extends AbstractTest {
 	public void testPasswordRepeating() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.post(PASSWORD_VALIDATION_URL).contentType(MediaType.APPLICATION_JSON)
 				.content(new String("foo123foo123"))).andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.jsonPath("$.statusCode").value(HttpStatus.NOT_ACCEPTABLE.value()));
-	}
-
-	@Test
-	public void testPasswordWithSpecialCharacter() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.post(PASSWORD_VALIDATION_URL).contentType(MediaType.APPLICATION_JSON)
-				.content(new String("foo123@test"))).andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.jsonPath("$.statusCode").value(HttpStatus.NOT_ACCEPTABLE.value()));
 	}
 

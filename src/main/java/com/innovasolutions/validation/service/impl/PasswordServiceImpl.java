@@ -12,6 +12,7 @@ import com.innovasolutions.validation.model.ValidationResponse;
 import com.innovasolutions.validation.rule.PasswordContainLowercaseCharacter;
 import com.innovasolutions.validation.rule.PasswordContainNumericalCharacter;
 import com.innovasolutions.validation.rule.PasswordContainRepeatingString;
+import com.innovasolutions.validation.rule.PasswordContainSpecialCharacter;
 import com.innovasolutions.validation.rule.PasswordContainUppercaseCharacter;
 import com.innovasolutions.validation.rule.PasswordIsNotBlank;
 import com.innovasolutions.validation.rule.PasswordLengthInRange;
@@ -28,6 +29,10 @@ public class PasswordServiceImpl implements PasswordValidationService {
 		if (!isPasswordNotBlank(password)) {
 			throw new ValidationException(
 					messageSource.getMessage("password.validation.is.blank", null, Locale.ENGLISH));
+		}
+		if (isPasswordContainSpecialCharacter(password)) {
+			return buildResponse(HttpStatus.NOT_ACCEPTABLE.value(),
+					messageSource.getMessage("password.validation.contain.special", null, Locale.ENGLISH));
 		}
 		if (isPasswordContainUppercase(password)) {
 			return buildResponse(HttpStatus.NOT_ACCEPTABLE.value(),
@@ -60,6 +65,10 @@ public class PasswordServiceImpl implements PasswordValidationService {
 
 	public Boolean isPasswordLengthBetween5And12(String password) {
 		return new PasswordLengthInRange(5, 12).isValid(password);
+	}
+
+	public Boolean isPasswordContainSpecialCharacter(String password) {
+		return new PasswordContainSpecialCharacter().isValid(password);
 	}
 
 	public Boolean isPasswordContainUppercase(String password) {
