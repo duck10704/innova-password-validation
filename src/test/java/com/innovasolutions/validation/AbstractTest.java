@@ -3,8 +3,6 @@ package com.innovasolutions.validation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 public abstract class AbstractTest {
 
 	protected final static String PASSWORD_VALIDATION_URL = "/password/validation";
@@ -14,14 +12,6 @@ public abstract class AbstractTest {
 
 	@Autowired
 	protected MockMvc mockMvc;
-
-	protected String toJsonString(Object object) {
-		try {
-			return new ObjectMapper().writeValueAsString(object);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
 
 	protected String genRandomLowercaseString(Integer stringLength) {
 		final StringBuilder sb = new StringBuilder();
