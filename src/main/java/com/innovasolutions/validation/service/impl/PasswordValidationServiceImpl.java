@@ -19,7 +19,7 @@ import com.innovasolutions.validation.rule.PasswordLengthInRange;
 import com.innovasolutions.validation.service.PasswordValidationService;
 
 @Service
-public class PasswordServiceImpl implements PasswordValidationService {
+public class PasswordValidationServiceImpl implements PasswordValidationService {
 
 	@Autowired
 	private MessageSource messageSource;
