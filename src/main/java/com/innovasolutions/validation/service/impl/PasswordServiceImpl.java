@@ -7,12 +7,13 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.innovasolutions.validation.model.ValidationException;
 import com.innovasolutions.validation.model.ValidationResponse;
 import com.innovasolutions.validation.rule.PasswordContainLowercaseCharacter;
 import com.innovasolutions.validation.rule.PasswordContainNumericalCharacter;
 import com.innovasolutions.validation.rule.PasswordContainRepeatingString;
 import com.innovasolutions.validation.rule.PasswordContainUppercaseCharacter;
-import com.innovasolutions.validation.rule.PasswordIsBlank;
+import com.innovasolutions.validation.rule.PasswordIsNotBlank;
 import com.innovasolutions.validation.rule.PasswordLengthInRange;
 import com.innovasolutions.validation.service.PasswordValidationService;
 
@@ -24,8 +25,8 @@ public class PasswordServiceImpl implements PasswordValidationService {
 
 	@Override
 	public ValidationResponse isValidPassword(String password) {
-		if (isPasswordIsBlank(password)) {
-			return buildResponse(HttpStatus.NOT_ACCEPTABLE.value(),
+		if (!isPasswordNotBlank(password)) {
+			throw new ValidationException(
 					messageSource.getMessage("password.validation.is.blank", null, Locale.ENGLISH));
 		}
 		if (isPasswordContainUppercase(password)) {
@@ -53,8 +54,8 @@ public class PasswordServiceImpl implements PasswordValidationService {
 				messageSource.getMessage("password.validation.valid", null, Locale.ENGLISH));
 	}
 
-	public Boolean isPasswordIsBlank(String password) {
-		return new PasswordIsBlank().isValid(password);
+	public Boolean isPasswordNotBlank(String password) {
+		return new PasswordIsNotBlank().isValid(password);
 	}
 
 	public Boolean isPasswordLengthBetween5And12(String password) {

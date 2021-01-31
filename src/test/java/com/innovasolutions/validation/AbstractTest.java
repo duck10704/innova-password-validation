@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.innovasolutions.validation.rule.PasswordIsBlank;
+import com.innovasolutions.validation.rule.PasswordIsNotBlank;
 import com.innovasolutions.validation.rule.PasswordLengthInRange;
 
 public abstract class AbstractTest {
@@ -14,7 +14,7 @@ public abstract class AbstractTest {
 	private final static String ALPHABETIC_UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	private final static String NUMERICAL = "0123456789";
 
-	protected PasswordIsBlank passwordIsBlank;
+	protected PasswordIsNotBlank passwordIsBlank;
 	protected PasswordLengthInRange passwordLengthInRange;
 
 	@Autowired
