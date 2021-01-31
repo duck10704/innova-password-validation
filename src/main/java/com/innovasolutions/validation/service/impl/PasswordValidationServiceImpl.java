@@ -25,7 +25,7 @@ public class PasswordValidationServiceImpl implements PasswordValidationService 
 	private MessageSource messageSource;
 
 	@Override
-	public ValidationResponse isValidPassword(String password) {
+	public ValidationResponse getPasswordValidationResponse(String password) {
 		if (!isPasswordNotBlank(password)) {
 			throw new ValidationException(
 					messageSource.getMessage("password.validation.is.blank", null, Locale.ENGLISH));

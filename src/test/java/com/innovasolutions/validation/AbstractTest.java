@@ -3,15 +3,20 @@ package com.innovasolutions.validation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.innovasolutions.validation.service.PasswordValidationService;
+
 public abstract class AbstractTest {
 
 	protected final static String PASSWORD_VALIDATION_URL = "/password/validation";
-	private final static String ALPHABETIC_LOWERCASE = "abcdefghijklmnopqrstuvxyz";
-	private final static String ALPHABETIC_UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	private final static String NUMERICAL = "0123456789";
+	protected final static String ALPHABETIC_LOWERCASE = "abcdefghijklmnopqrstuvxyz";
+	protected final static String ALPHABETIC_UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	protected final static String NUMERICAL = "0123456789";
 
 	@Autowired
 	protected MockMvc mockMvc;
+
+	@Autowired
+	protected PasswordValidationService passwordValidationService;
 
 	protected String genRandomLowercaseString(Integer stringLength) {
 		final StringBuilder sb = new StringBuilder();
@@ -43,11 +48,11 @@ public abstract class AbstractTest {
 		return sb.toString();
 	}
 
-	protected String genRandomLowercaseAndNumericalString(Integer stringLength) {
+	protected String genRandomMixString(Integer stringLength) {
 		final StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < stringLength; i++) {
-			int index = (int) ((ALPHABETIC_LOWERCASE + NUMERICAL).length() * Math.random());
-			sb.append((ALPHABETIC_LOWERCASE + NUMERICAL).charAt(index));
+			int index = (int) ((ALPHABETIC_LOWERCASE + ALPHABETIC_UPPERCASE + NUMERICAL).length() * Math.random());
+			sb.append((ALPHABETIC_LOWERCASE + ALPHABETIC_UPPERCASE + NUMERICAL).charAt(index));
 		}
 
 		return sb.toString();

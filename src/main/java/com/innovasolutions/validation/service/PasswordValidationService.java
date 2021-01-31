@@ -4,5 +4,5 @@ import com.innovasolutions.validation.model.ValidationResponse;
 
 public interface PasswordValidationService {
 
-	ValidationResponse isValidPassword(String password);
+	ValidationResponse getPasswordValidationResponse(String password);
 }

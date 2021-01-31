@@ -16,11 +16,11 @@ import com.innovasolutions.validation.service.PasswordValidationService;
 public class PasswordValidationController {
 
 	@Autowired
-	private PasswordValidationService passwordService;
+	private PasswordValidationService passwordValidationService;
 
 	@PostMapping("/password/validation")
 	public ResponseEntity<ValidationResponse> passwordValidation(@RequestBody String password) {
-		final ValidationResponse r = passwordService.isValidPassword(password);
+		final ValidationResponse r = passwordValidationService.getPasswordValidationResponse(password);
 		return ResponseEntity.ok().body(r);
 	}
 }
