@@ -2,9 +2,7 @@
 A Restful password validation API service for Innova Solutions programming project.
 
 ## Development
-JDK 1.8+
-Eclipse
-Spring Boot
+JDK 1.8+ / Eclipse / Spring Boot
 
 ## Usage
 1. Clone project
